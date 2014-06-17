@@ -27,8 +27,7 @@ function! s:define_unite_actions()
       let l:ext = l:candidate.vimfiler__extension
       " [todo]リストで比較する
       if l:ext == 'mp3' || l:ext == 'mp4' || l:ext == 'm4a' || l:ext == 'aiff' || l:ext == 'wav'
-        " [todo]ファイル名にクオートが含まれるときにエスケープする
-        call vimproc#system_bg(s:command . ' "'.l:candidate.action__path.'"')
+        call vimproc#system_bg(s:command." ".shellescape(l:candidate.action__path))
 
         " notify music title
         if exists("g:loaded_mac_notify") && exists("g:unite_afplay_with_mac_notify")
@@ -49,7 +48,6 @@ function! s:define_unite_actions()
   " }}}
   
   " play all music in selected directory {{{
-  "[todo] 動くようにする
   let s:start_afplay_all= {
         \'description': 'play all music in selected directory by afplay command',
         \'is_selectable': 0,
@@ -59,19 +57,21 @@ function! s:define_unite_actions()
     call vimproc#system('killall afplay')
   
     " search & play music in selected directory
-    let s:music_dir = fnameescape(expand(a:candidate.abbr))
-    call vimproc#system_bg(
-          \'find ' .s:music_dir. 
-          \' -name "*.mp3" -o -name "*.m4a" 
-          \-exec afplay "{}" \;'
-    \)
+    " [todo] 拡張子を複数指定すると動かない
+    " [todo] 途中停止ができない。afplayをkillしてもfindが終了するまで再生が止まらない。
+    let s:music_dir = shellescape(a:candidate.abbr)
+    echo vimproc#system_bg(
+          \ 'find '.s:music_dir.
+          \ ' -name "*.mp3"
+          \ -exec afplay "{}" \;'
+    \ )
 
     " notify music title
-    if exists("g:loaded_mac_notify") && exists("g:unite_afplay_with_mac_notify")
-      MacNotifyExpand l:candidate.vimfiler__filename
-    else
-      echo "Playing... " . l:candidate.vimfiler__filename
-    endif
+    " if exists("g:loaded_mac_notify") && exists("g:unite_afplay_with_mac_notify")
+    "   MacNotifyExpand s:music_dir.vimfiler__filename
+    " else
+    "   echo "Playing... " . s:music_dir.vimfiler__filename
+    " endif
 
   endfunction
   
