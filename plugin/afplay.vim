@@ -54,15 +54,13 @@ function! s:define_unite_actions()
   \}
   
   function! s:start_afplay_all.func(candidate)
-    call vimproc#system('killall afplay')
+    call vimproc#system('killall find')
   
     " search & play music in selected directory
-    " [todo] 拡張子を複数指定すると動かない
-    " [todo] 途中停止ができない。afplayをkillしてもfindが終了するまで再生が止まらない。
     let s:music_dir = shellescape(a:candidate.abbr)
     echo vimproc#system_bg(
           \ 'find '.s:music_dir.
-          \ ' -name "*.mp3"
+          \ ' \( -name "*.mp3" -o -name "*.m4a" -o -name "*.mp4" -o -name "*.aiff" -o -name "*.wav" \)
           \ -exec afplay "{}" \;'
     \ )
 
@@ -82,7 +80,9 @@ function! s:define_unite_actions()
   
   " unite-afplay_stop {{{
   function! s:stop_afplay()
-    call vimproc#system_bg("killall afplay")
+    "[todo] プロセスを探してkillしたい
+    call vimproc#system_bg('killall find')
+    call vimproc#system_bg('killall afplay')
   endfunction
   command! StopAfplay call s:stop_afplay()
   " }}}
