@@ -3,7 +3,7 @@ unite_afplay-vim
 
 This plugin adds unite action playing music for Vimfiler.
 
-## Requirement
+## Requirements
 
 * command: afplay
 * plugin: [vimproc](https://github.com/Shougo/vimproc.vim.git), [Vimfiler](https://github.com/Shougo/vimfiler.vim.git)
@@ -16,8 +16,8 @@ NeoBundle 'modsound/unite_afplay-vim.git'
 
 ## How to use
 
-After add settings as follows in your vimrc, Please open your music directory by Vimfiler.  
-If you select music file or music directory and press key you set, Vim will play music background.
+After adding settings as follows in your vimrc, Please open your music directory by Vimfiler.  
+If you select music file or music directory and press key you set("af" as follows), Vim will play music background.
 
 ### keymap sample
 
